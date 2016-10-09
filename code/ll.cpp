@@ -51,10 +51,71 @@ void linkedList::setMaxSize(int data){size = data;}
 void linkedList::insertNode(int data, int index){
 
 	int size = getMaxSize();
-	if(index > size+1){
-		cout <<"  check the index again " <<endl;
+	if(index < 0 || index > size ){
+		cout <<"Wrong index" <<endl;
 		return;
 	}
+
+	if (index == 0){
+		Node *newNode = createNode(data);
+		newNode->next = head;
+		head = newNode;
+	}
+	else if (index == size){
+		Node *temp = head;
+		while(temp->next != NULL)
+			temp = temp->next;
+		Node *newNode = createNode(data);
+		newNode->next = NULL;
+		temp->next = newNode;
+	}
+	else{
+		Node *temp = head;
+		while(--index != 0)
+			temp = temp->next;
+		Node *newNode = createNode(data);
+		newNode->next = temp->next;
+		temp->next = newNode;
+	}
+
+	setMaxSize(size+1);
+}
+
+
+void linkedList::deleteNode(int index){
+
+	int size = getMaxSize();
+	if(index < 0 || index >= size ){
+		cout <<"Wrong index" <<endl;
+		return;
+	}
+
+
+	if(index == 0){
+		Node* temp = head;
+		head = temp->next;
+		delete temp;
+
+	}
+
+	else if (index ==  size-1){
+		Node *temp = head;
+		while(temp->next->next != NULL)
+			temp = temp->next;
+		Node *saveTemp = temp->next;
+		temp->next = NULL;
+		delete saveTemp;
+	}
+	else{
+		Node *temp = head;
+		while(--index != 0)
+			temp = temp->next;
+		Node *saveTemp = temp->next;
+		temp->next = temp->next->next;
+		delete saveTemp;
+
+	}
+	setMaxSize(size-1);
 
 }
 
@@ -71,7 +132,7 @@ void linkedList::printList(){
 
 int main(){
 
-	int size,data;
+	int size = 0,data = -999,number = 0,pos = -1,index = -1;
 	linkedList *list = new linkedList();
 	do{
 		cout<<"Enter the size of the list"<<endl;
@@ -87,7 +148,13 @@ int main(){
 		list->addNode(data);
 	}
 	list->printList();
-	list->insertNode(10,8);	
-
+	cout<<"Enter the number to be inserted followed by the index"<<endl;
+	cin>>number>>pos;
+	list->insertNode(number,pos);
+	list->printList();
+	cout<<"Enter the index to be deleted"<<endl;
+	cin>> index;
+	list->deleteNode(index);
+	list->printList();
 return 0;
 }
